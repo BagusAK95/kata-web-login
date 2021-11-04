@@ -3,26 +3,38 @@ import {
   Controller,
   Delete,
   Get,
+  InternalServerErrorException,
+  Param,
   Post,
-  Render,
   Req,
   Res,
 } from '@nestjs/common';
 import { AppService } from './app.service';
 import { Response, Request } from 'express';
+import * as jwt from 'jsonwebtoken';
 
 @Controller()
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
-  @Get('/auth/cli/browser')
-  index(@Req() request: Request, @Res() res: Response) {
+  @Get('/auth/cli/browser/:jwtToken')
+  index(@Param('jwtToken') jwtToken: string, @Req() request: Request, @Res() res: Response) {
+    const jwtPayload: any = jwt.verify(jwtToken, 'secret')
+    if (!jwtPayload) {
+      throw new InternalServerErrorException('Invalid Token')
+    }
+
+    const { wsServer } = jwtPayload
+    if (!wsServer) {
+      throw new InternalServerErrorException('Invalid Token')
+    }
+
     const { token, username } = request.cookies;
     if (!token) {
       return res.render('signin');
     }
 
-    return res.render('index', { username });
+    return res.render('index', { username, wsServer });
   }
 
   @Post('/login')

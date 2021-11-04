@@ -38,11 +38,10 @@
             <input type="button" value="Log Out" id="logout" class="btn btn-block btn-primary">
             </div>
           </div>
-          
         </div>
-        
       </div>
     </div>
+    <div id="wsServer" style="display: none;">{{ wsServer }}</div>
   </div>
 
   
@@ -70,7 +69,7 @@
     </script>
     <script>
       $(document).ready(function() {
-        const ws = new WebSocket('ws://127.0.0.1:8080');
+        const ws = new WebSocket($('#wsServer').text());
         ws.onopen = function() {
           ws.send(JSON.stringify({ 
               token: getCookie('token'), 
