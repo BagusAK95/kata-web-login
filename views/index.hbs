@@ -79,6 +79,8 @@
         };
 
         $('#logout').click(function() {
+          document.getElementById("logout").disabled = true
+
           $.ajax({
             type: 'DELETE',
             url: '/logout',
@@ -86,6 +88,7 @@
               window.location.reload();
             },
             error: function() {
+              document.getElementById("logout").disabled = false
               alert('Error !')
             }
           });

@@ -74,6 +74,8 @@
     <script>
       $(document).ready(function() {
         $('#login').click(function() {
+          document.getElementById("login").disabled = true
+
           $.ajax({
             type: 'POST',
             url: '/login',
@@ -85,6 +87,7 @@
               window.location.reload();
             },
             error: function() {
+              document.getElementById("login").disabled = false
               alert('Invalid Username or Password')
             }
           });
